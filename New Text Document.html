@@ -126,50 +126,23 @@
                 opacity: 1;
             }
         }
-
-        /* ›‰ ç—Œ‘Ì */
-        .fan {
-            margin: 20px auto;
-            width: 80px;
-            height: 80px;
-            border: 16px solid #f3f3f3; /* —‰ê Å” “„Ì‰Â ›‰ */
-            border-top: 16px solid #1abc9c; /* —‰ê Å—ÂùÂ«Ì ›‰ */
-            border-radius: 50%;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
     </style>
 </head>
 <body>
     <div class="container">
         <h1>HMSTR Mining Speed Booster</h1>
-        
-        <!--  Ê÷ÌÕ«  ÃœÌœ -->
-        <p>
-            This tool allows you to mine HMSTR tokens at a rate of 1 token per hour for each token you pay.
-            Simply enter the amount of HMSTR tokens you'd like to pay, and your mining speed will be adjusted accordingly.
-            For example, if you pay 1 token, you'll mine 1 token every hour. The more tokens you pay, the faster you mine.
-        </p>
-
+        <p>To start mining and boost your speed, please enter the amount of HMSTR tokens.</p>
         <input type="number" id="amount" placeholder="Enter HMSTR amount" />
         <button onclick="startMining()">Start Mining</button>
-
-        <!-- ‰„«Ì‘ «‰Ì„Ì‘‰ ›‰ œ— Õ«· ç—Œ‘ -->
-        <div class="fan"></div>
 
         <div class="result" id="result"></div>
 
         <div class="stats">
-            <p id="speed">Mining Speed: 0 tokens/hr</p>
+            <p id="speed">Mining Speed: 0 tokens/hour</p>
             <p id="mined">Total Mined: 0 HMSTR</p>
         </div>
 
-        <button class="boost-btn boost-animation" onclick="boostMining()">Boost Mining</button>
+        <button class="boost-btn" onclick="boostMining()">Boost Mining</button>
         <button class="boost-btn" onclick="withdraw()">Withdraw</button>
     </div>
 
