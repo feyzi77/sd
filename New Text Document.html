@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMSTR Mining Speed Booster</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0e0e0e;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            width: 500px;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #1abc9c;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+        }
+
+        p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 20px;
+            width: 70%;
+            border-radius: 10px;
+            border: 2px solid #1abc9c;
+            background: transparent;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00e5ff;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 20px;
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px;
+            width: 70%;
+        }
+
+        button:hover {
+            background-color: #00e5ff;
+        }
+
+        .result {
+            font-size: 20px;
+            color: #ffdd57;
+            margin-top: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+
+        .stats {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+        .boost-btn {
+            background-color: #ff5722;
+        }
+
+        .boost-btn:hover {
+            background-color: #ff9800;
+        }
+
+        .mining-animation {
+            animation: miningPulse 1s infinite;
+        }
+
+        @keyframes miningPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .boost-animation {
+            animation: boostPulse 1s ease-out;
+        }
+
+        @keyframes boostPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* ›‰ ç—Œ‘Ì */
+        .fan {
+            margin: 20px auto;
+            width: 80px;
+            height: 80px;
+            border: 16px solid #f3f3f3; /* —‰ê Å” “„Ì‰Â ›‰ */
+            border-top: 16px solid #1abc9c; /* —‰ê Å—ÂùÂ«Ì ›‰ */
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HMSTR Mining Speed Booster</h1>
+        
+        <!--  Ê÷ÌÕ«  ÃœÌœ -->
+        <p>
+            This tool allows you to mine HMSTR tokens at a rate of 1 token per hour for each token you pay.
+            Simply enter the amount of HMSTR tokens you'd like to pay, and your mining speed will be adjusted accordingly.
+            For example, if you pay 1 token, you'll mine 1 token every hour. The more tokens you pay, the faster you mine.
+        </p>
+
+        <input type="number" id="amount" placeholder="Enter HMSTR amount" />
+        <button onclick="startMining()">Start Mining</button>
+
+        <!-- ‰„«Ì‘ «‰Ì„Ì‘‰ ›‰ œ— Õ«· ç—Œ‘ -->
+        <div class="fan"></div>
+
+        <div class="result" id="result"></div>
+
+        <div class="stats">
+            <p id="speed">Mining Speed: 0 tokens/hr</p>
+            <p id="mined">Total Mined: 0 HMSTR</p>
+        </div>
+
+        <button class="boost-btn boost-animation" onclick="boostMining()">Boost Mining</button>
+        <button class="boost-btn" onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tonweb@latest"></script>
+    <script src="script.js"></script>
+</body>
+</html>
